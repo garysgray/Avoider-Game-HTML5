@@ -6,7 +6,8 @@ body
 	color: #575757;
 	font: 14px/21px Arial,Helvetica,sans-serif;
 	background-image:url(../img/space.jpg);
-	background-size: 100%;
+	background-size: cover;
+    background-repeat: no-repeat
 }
 
 a 
