@@ -1,7 +1,7 @@
 function controller(newWidth,newHeight)
 {
 	//our controller has a device object to control the HTML5 Canvas
-    this.m_Dev = new device(newWidth,newHeight);
+    this.m_Dev = new Device(newWidth,newHeight);
 	//key events are wrapped in the device object as well, this sets them up
 	this.m_Dev.initKeys();
 	
@@ -139,8 +139,8 @@ function controller(newWidth,newHeight)
     this.render = function(aGame)
     {
         //canvas render stuff
-        this.m_Dev.m_Ctx.fillStyle = '#000';
-        this.m_Dev.m_Ctx.fillRect(0, 0, canvas.width, canvas.height);
+        this.m_Dev.ctx.fillStyle = '#000';
+        this.m_Dev.ctx.fillRect(0, 0, canvas.width, canvas.height);
         //canvas render text stuff
 		this.m_Dev.setFont("bold 14pt Calibri");
 		this.m_Dev.colorText("white");
@@ -152,28 +152,28 @@ function controller(newWidth,newHeight)
             {
                 
 				//set up props background and title bar/splash screen
-                this.m_Dev.renderImage(this.m_Dev.m_Images.getImage("background"),aGame.backGround);
-                this.m_Dev.centerImage(this.m_Dev.m_Images.getImage("splash"),aGame.splashScreen);
+                this.m_Dev.renderImage(this.m_Dev.images.getObject("background"),aGame.backGround);
+                this.m_Dev.centerImage(this.m_Dev.images.getObject("splash"),aGame.splashScreen);
 				//text to help player out
-				this.m_Dev.centerTextX("CATCH  FIRE  BALLS  TO  GET  AMMO",this.m_Dev.m_Canvas.height-150);
-				this.m_Dev.centerTextX("USE  SPACE-BAR  TO  FIRE",this.m_Dev.m_Canvas.height-100);
-				this.m_Dev.centerTextX("PRESS  THE  SPACE-BAR  TO  START",this.m_Dev.m_Canvas.height-50);
+				this.m_Dev.centerTextX("CATCH  FIRE  BALLS  TO  GET  AMMO",this.m_Dev.canvas.height-150);
+				this.m_Dev.centerTextX("USE  SPACE-BAR  TO  FIRE",this.m_Dev.canvas.height-100);
+				this.m_Dev.centerTextX("PRESS  THE  SPACE-BAR  TO  START",this.m_Dev.canvas.height-50);
             }
 			break;
 			
 			case "PLAY"://play-gameState	
             {
 				this.m_Dev.colorText("red");//changes color of font until its changed
-                this.m_Dev.renderImage(this.m_Dev.m_Images.getImage("background"),aGame.backGround);
+                this.m_Dev.renderImage(this.m_Dev.images.getObject("background"),aGame.backGround);
                 ////functions for rendering game objects are done 
                 this.renderNPCSprites(aGame);
                 this.renderBullets(aGame);
 				this.renderPlayer(aGame);
 				////HUD
                 //magic numbers
-				this.m_Dev.centerTextX("Score :  "+ aGame.score.toString(),this.m_Dev.m_Canvas.height-25);
-				this.m_Dev.putText("Ammo :  "+ aGame.ammo.toString(),25,this.m_Dev.m_Canvas.height-25);
-				this.m_Dev.putText("Lives :  "+ aGame.lives.toString(),500,this.m_Dev.m_Canvas.height-25);	  
+				this.m_Dev.centerTextX("Score :  "+ aGame.score.toString(),this.m_Dev.canvas.height-25);
+				this.m_Dev.putText("Ammo :  "+ aGame.ammo.toString(),25,this.m_Dev.canvas.height-25);
+				this.m_Dev.putText("Lives :  "+ aGame.lives.toString(),500,this.m_Dev.canvas.height-25);	  
             }
 			break;
  
@@ -181,31 +181,31 @@ function controller(newWidth,newHeight)
             {
 				this.m_Dev.colorText("white");//font will be this color untill changed
 				//set up props background and title bar/splash screen
-                this.m_Dev.renderImage(this.m_Dev.m_Images.getImage("background"),aGame.backGround);
-                this.m_Dev.centerImage(this.m_Dev.m_Images.getImage("pause"),aGame.pauseScreen);
+                this.m_Dev.renderImage(this.m_Dev.images.getObject("background"),aGame.backGround);
+                this.m_Dev.centerImage(this.m_Dev.images.getObject("pause"),aGame.pauseScreen);
 				//text to help player out
 				//magic numbers
-				this.m_Dev.centerTextX("PRESS  P  TO  RESUME  GAME",this.m_Dev.m_Canvas.width/4,this.m_Dev.m_Canvas.height-50);
+				this.m_Dev.centerTextX("PRESS  P  TO  RESUME  GAME",this.m_Dev.canvas.width/4,this.m_Dev.canvas.height-50);
             }
 			break;
 			case "WIN"://Win-gameState
 			{
-				this.m_Dev.centerTextX("PRESS  THE  R  KEY  TO  PLAY",this.m_Dev.m_Canvas.width/4,this.m_Dev.m_Canvas.height-50);
+				this.m_Dev.centerTextX("PRESS  THE  R  KEY  TO  PLAY",this.m_Dev.canvas.width/4,this.m_Dev.canvas.height-50);
 			}
 			break;
             //magic numbers
 			case "LOSE"://Lose-gameState
 			{	
-				this.m_Dev.renderImage(this.m_Dev.m_Images.getImage("background"),aGame.backGround);
-				this.m_Dev.centerImage(this.m_Dev.m_Images.getImage("die"),aGame.dieScreen);
+				this.m_Dev.renderImage(this.m_Dev.images.getObject("background"),aGame.backGround);
+				this.m_Dev.centerImage(this.m_Dev.images.getObject("die"),aGame.dieScreen);
 					
 				if(aGame.lives <= 0)
 				{				
-					this.m_Dev.centerTextX("SORRY  YOU  LOST,  PRESS  R  TO  RETRY",this.m_Dev.m_Canvas.width/4,this.m_Dev.m_Canvas.height-50);
+					this.m_Dev.centerTextX("SORRY  YOU  LOST,  PRESS  R  TO  RETRY",this.m_Dev.canvas.width/4,this.m_Dev.canvas.height-50);
 				}
 				else
 				{
-					this.m_Dev.centerTextX("SORRY  YOU  DIED,  PRESS  R  TO  REVIVE",this.m_Dev.m_Canvas.width/4,this.m_Dev.m_Canvas.height-50);
+					this.m_Dev.centerTextX("SORRY  YOU  DIED,  PRESS  R  TO  REVIVE",this.m_Dev.canvas.width/4,this.m_Dev.canvas.height-50);
 				}
 				this.renderPlayer(aGame);
 			}
@@ -233,7 +233,7 @@ function controller(newWidth,newHeight)
 	//for now it adds objects to the projectilesHolder and shoots a projectile
 	this.checkUserInput = function(aGame)
 	{
-		 if(this.m_Dev.m_MouseDown && Date.now()-aGame.player.m_ProjectileTimer > aGame.player.m_ShootDelay || 
+		 if(this.m_Dev.mouseDown && Date.now()-aGame.player.m_ProjectileTimer > aGame.player.m_ShootDelay || 
             this.m_Dev.checkKey(aGame.gameConsts.playKey)  && Date.now()-aGame.player.m_ProjectileTimer > aGame.player.m_ShootDelay)
         {
             var bullet = new gameObject("bullet",12,12,(aGame.player.m_PosX) ,aGame.player.m_PosY ,aGame.gameConsts.bulletSpeed);
@@ -279,7 +279,7 @@ function controller(newWidth,newHeight)
 		{
 			//this is made to help get us a X pos  in range that will not let orb be off the screen
 			//buff values help dial in perfect position
-			var rndXValue = Math.floor(Math.random() *((this.m_Dev.m_Canvas.width-this.buffer1)-this.buffer2+1));		
+			var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-this.buffer1)-this.buffer2+1));		
             orb = new gameObject("orb",29,29,rndXValue,0, aGame.gameConsts.orbSpeed);
 					
 			for(var i = 0;i < aGame.gameSprites.getSize();i++)
@@ -291,7 +291,7 @@ function controller(newWidth,newHeight)
 					{
 						break;
 					}
-					var rndXValue = Math.floor(Math.random() *((this.m_Dev.m_Canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
+					var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
 					orb.movePos = (rndXValue,0);
 					count ++;
 				}		
@@ -303,7 +303,7 @@ function controller(newWidth,newHeight)
 		{
 			//this is made to help get us a X pos  in range that will not let sprite be off the screen
 			//buff values help dial in perfect position
-			var rndXValue = Math.floor(Math.random() *((this.m_Dev.m_Canvas.width-this.buffer1)-this.buffer2+1));			
+			var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-this.buffer1)-this.buffer2+1));			
 			fireAmmo = new gameObject("fireAmmo",20,20,rndXValue,0, aGame.gameConsts.orbSpeed);       
 			for(var i = 0;i < aGame.gameSprites.getSize();i++)
 			{
@@ -314,7 +314,7 @@ function controller(newWidth,newHeight)
 					{
 						break;
 					}
-					var rndXValue = Math.floor(Math.random() *((this.m_Dev.m_Canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
+					var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
 					fireAmmo.movePos = (rndXValue,0);
 					count ++;
 				}				
@@ -326,7 +326,7 @@ function controller(newWidth,newHeight)
 		for(var i = 0;i <  aGame.gameSprites.getSize(); i++)
 		{
 			 aGame.gameSprites.getIndex(i).moveDown(aDT);			 
-			 if(aGame.gameSprites.getIndex(i).m_PosY > this.m_Dev.m_Canvas.height-100)
+			 if(aGame.gameSprites.getIndex(i).m_PosY > this.m_Dev.canvas.height-100)
 			 {
 				aGame.gameSprites.subObject(i);
 			 }
@@ -387,8 +387,8 @@ function controller(newWidth,newHeight)
     {
         ////this makes a temp object of the image we want to use
 		//this is so the image holder does not have to keep finding image
-        tempImage1 = this.m_Dev.m_Images.getImage("orb")
-		tempImage2 = this.m_Dev.m_Images.getImage("fireAmmo")	
+        tempImage1 = this.m_Dev.images.getObject("orb")
+		tempImage2 = this.m_Dev.images.getObject("fireAmmo")	
 		 for (var i = 0; i < aGame.gameSprites.getSize(); i++)
         {	
 			////this is to make a temp object for easier code to write and understand
@@ -409,7 +409,7 @@ function controller(newWidth,newHeight)
 	{	
 		////this makes a temp object of the image we want to use
 		//this is so the image holder does not have to keep finding image
-		tempImage = this.m_Dev.m_Images.getImage("bullet")	
+		tempImage = this.m_Dev.images.getObject("bullet")	
 		 for (var i = 0; i < aGame.projectiles.getSize(); i++)
 			{	
 				////this is to make a temp object for easier code to write and understand
@@ -420,7 +420,7 @@ function controller(newWidth,newHeight)
 	
 	this.renderPlayer = function(aGame)
 	{
-        tempImage = this.m_Dev.m_Images.getImage("player")
+        tempImage = this.m_Dev.images.getObject("player")
 		if(aGame.playState == "SHIELD")
 		{
 			aGame.player.m_State = 1;

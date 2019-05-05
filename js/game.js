@@ -19,7 +19,7 @@ class Game
         this._dieScreen = new backDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
         this._projectiles = new objHolder();
         this._gameSprites = new objHolder();            
-        this._timer = new timer(1000);
+        this._timer = new Timer(1000);
     }
     
     //get functions
@@ -49,24 +49,25 @@ class Game
     
     initGame(aDev)
 	{
-		var sprite1 = new sprite("img/bullet.png","bullet");
-		var sprite2 = new sprite("img/orb.png","orb");
-        var sprite3 = new sprite("img/fire.png","fireAmmo");
-        var sprite4 = new sprite("img/ships.png","player");
+		//var sprite1 = new sprite("img/bullet.png","bullet");
+		// var sprite2 = new sprite("img/orb.png","orb");
+        // var sprite3 = new sprite("img/fire.png","fireAmmo");
+        // var sprite4 = new sprite("img/ships.png","player");
         
-        var sprite5 = new sprite("img/stars.png","background");
-		var sprite6 = new sprite("img/splash.png","splash");
-        var sprite7 = new sprite("img/pause.png","pause");
-        var sprite8 = new sprite("img/die.png","die");
+        // var sprite5 = new sprite("img/stars.png","background");
+		// var sprite6 = new sprite("img/splash.png","splash");
+        // var sprite7 = new sprite("img/pause.png","pause");
+        // var sprite8 = new sprite("img/die.png","die");
 
-		aDev.m_Images.addImage(sprite1);
-		aDev.m_Images.addImage(sprite2);
-        aDev.m_Images.addImage(sprite3);
-        aDev.m_Images.addImage(sprite4);
-        aDev.m_Images.addImage(sprite5);
-		aDev.m_Images.addImage(sprite6);
-        aDev.m_Images.addImage(sprite7);
-        aDev.m_Images.addImage(sprite8);
+		aDev.images.addImage("img/bullet.png","bullet");
+        aDev.images.addImage("img/orb.png","orb");
+		aDev.images.addImage("img/fire.png","fireAmmo");
+        aDev.images.addImage("img/ships.png","player");
+        aDev.images.addImage("img/stars.png","background");
+        aDev.images.addImage("img/splash.png","splash");
+		aDev.images.addImage("img/pause.png","pause");
+        aDev.images.addImage("img/die.png","die");
+        
 
         aDev.audio.addSound("hit","audio/hit.wav");
         aDev.audio.addSound("shoot","audio/shoot.wav");

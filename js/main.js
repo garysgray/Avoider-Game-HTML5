@@ -1,20 +1,18 @@
 // init values for controller or game objects
-//var screenWidth = 600;
-//var screenHeight = 600;
 var time = 0;
 const frameRateValue = 1000;	
 
-//make our game object
+//make our game object that loads data that is particular
+//to this game 
 var myGame = new Game();
 
-//init main objects to get the game up and running
-//controller sets up things and directs how things should work together, game object depends on controller to take care of details 
+//controller helps set things up and directs how things should work together
+//game object depends on controller to take care of coordination 
+//controller uses games data to help game
 var myControl = new controller(myGame.gameConsts.screenWidth,myGame.gameConsts.screenHeight);
 
-//init the actual game using controller
+//init the actual game using controller but with games inards
 myControl.initGame(myGame);
-
-
 
 //this is how we do game loop with frame rate using the 
 //window.requestAnimationFrame function 

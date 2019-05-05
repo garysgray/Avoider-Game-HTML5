@@ -41,10 +41,10 @@ function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 		this.m_PosY = newY;
 	}
        
-	this.getImage = function()
-	{
-		return this.m_Image;
-	}
+	// this.getImage = function()
+	// {
+		// return this.m_Image;
+	// }
 	
 	this.checkObjCollision = function(aObj)
 	{
@@ -78,18 +78,18 @@ function player(aWidth,aHeight,newX,newY,aSpeed)
 		{
 			this.m_PosX = this.m_Width*.5;
 		}
-		if(this.m_PosX + this.m_Width*.5 > aDev.m_Canvas.width)
+		if(this.m_PosX + this.m_Width*.5 > aDev.canvas.width)
 		{	
-			this.m_PosX = aDev.m_Canvas.width - this.m_Width*.5;
+			this.m_PosX = aDev.canvas.width - this.m_Width*.5;
 		}		
 		if(this.m_PosY - this.m_Height*.5 < 0 )
 		{
 			this.m_PosY = this.m_Height*.5;
 		}
 		//// the -50 is for a buffer to keep player from hitting bottom for hud
-		if(this.m_PosY + this.m_Height*.5 > aDev.m_Canvas.height-50)
+		if(this.m_PosY + this.m_Height*.5 > aDev.canvas.height-50)
 		{		
-			this.m_PosY =(aDev.m_Canvas.height-50) - this.m_Height*.5;
+			this.m_PosY =(aDev.canvas.height-50) - this.m_Height*.5;
 		}
 	}
 	
@@ -110,6 +110,29 @@ function backDrop(aWidth,aHeight,newX,newY)
 	
 }
 backDrop.prototype = new gameObject()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
