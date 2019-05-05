@@ -17,7 +17,7 @@ a
 
 a:hover
 {
-text-decoration: none;
+    text-decoration: none;
 }
 
 ol 
@@ -53,6 +53,7 @@ h3
 	
 	color:red;
 }
+
 #top_menu li
 {
 	display:inline-block;
@@ -63,6 +64,6 @@ h3
 
 a
 {
-font: bold 18px Calibri;
-color:red;
+    font: bold 18px Calibri;
+    color:red;
 }

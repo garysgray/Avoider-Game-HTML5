@@ -19,6 +19,7 @@ function device(width,height)
 	this.renderImage = function(aImage,aObject)
 	{
 		this.m_Ctx.drawImage(aImage,aObject.m_PosX,aObject.m_PosY);
+
 	}
 	
 	this.renderClip = function(aClip,aObject)

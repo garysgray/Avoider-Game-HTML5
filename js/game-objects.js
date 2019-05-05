@@ -8,6 +8,11 @@
 //keys checks values shoiuld be part of game obj conts?
 //magic numbers in controller 
 //seters and getters ??
+//why do controller and game need width and height
+// should b epart of game constants or controller consts
+//set game values may be repetative
+//whats up with state
+//make an official bug page
 function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 {
     this.m_Name = aName;	
@@ -17,6 +22,7 @@ function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 	this.m_PosY = newY;
 	this.m_Speed = aSpeed;
     this.m_spaceBuffer = 12;
+    this.m_State = 0
     
 	this.update = function(aDev,aDT)
 	{
