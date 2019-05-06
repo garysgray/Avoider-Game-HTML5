@@ -1,13 +1,13 @@
 function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 {
-    this.m_Name = aName;	
-	this.m_Width = aWidth;
-	this.m_Height = aHeight;
-	this.m_PosX = newX;
-	this.m_PosY = newY;
-	this.m_Speed = aSpeed;
-    this.m_spaceBuffer = 12;
-    this.m_State = 0
+    this._name = aName;	
+	this._width = aWidth;
+	this._height = aHeight;
+	this._posX = newX;
+	this._posY = newY;
+	this._speed = aSpeed;
+    this._spaceBuffer = 12;
+    this._state = 0
     
 	this.update = function(aDev,aDT)
 	{
@@ -17,35 +17,42 @@ function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
     //main action other then player
 	this.moveDown = function(aDT)
 	{   
-		this.m_PosY += this.m_Speed * aDT;  
+		this._posY += this._speed * aDT;  
 	}
     //helps for spawing game objects
 	this.movePos = function(newX,newY)
 	{
-		this.m_PosX = newX;
-		this.m_PosY = newY;
+		this._posX = newX;
+		this._posY = newY;
 	}
        
-    this.checkObjCollision = function(m_PosX,m_PosY,m_Width,m_Height)
+    this.checkObjCollision = function(aPosX,aPosY,aWidth,aHeight)
 	{
-        if(this.m_PosX + this.m_Width*.5-this.m_spaceBuffer > m_PosX - m_Width*.5 && this.m_PosX-this.m_Width*.5-this.m_spaceBuffer < m_PosX + m_Width*.5
+        if(this._posX + this._width*.5-this._spaceBuffer > aPosX - aWidth*.5 && this._posX-this._width*.5-this._spaceBuffer < aPosX + aWidth*.5
         &&
-        this.m_PosY + this.m_Height*.5-this.m_spaceBuffer > m_PosY - m_Height*.5 && this.m_PosY- this.m_Height*.5-this.m_spaceBuffer < m_PosY + m_Height*.5 )   
+        this._posY + this._height*.5-this._spaceBuffer > aPosY - aHeight*.5 && this._posY- this._height*.5-this._spaceBuffer < aPosY + aHeight*.5 )   
         {
         return true;
         }		
 	}
+     
+    
+    
+    
+    
+    
 }
 
 function player(aWidth,aHeight,newX,newY,aSpeed)
 {	
-	this.m_Width = aWidth;
-	this.m_Height = aHeight;
-	this.m_PosX = newX;
-	this.m_PosY = newY;
-	this.m_Speed = aSpeed;
-	this.m_ProjectileTimer = Date.now();
-	this.m_ShootDelay = 200;
+    //this._name = " ";	
+	this._width = aWidth;
+	this._height = aHeight;
+	this._posX = newX;
+	this._posY = newY;
+	this._speed = aSpeed;
+	this._projectileTimer = Date.now();
+	this._shootDelay = 200;
     
 	this.update = function(aDev,aDT)
 	{
@@ -54,22 +61,22 @@ function player(aWidth,aHeight,newX,newY,aSpeed)
     
     this.borderCheck = function(aDev)
 	{
-		if(this.m_PosX - this.m_Width*.5 < 0 )
+		if(this._posX - this._width*.5 < 0 )
 		{
-			this.m_PosX = this.m_Width*.5;
+			this._posX = this._width*.5;
 		}
-		if(this.m_PosX + this.m_Width*.5 > aDev.canvas.width)
+		if(this._posX + this._width*.5 > aDev.canvas.width)
 		{	
-			this.m_PosX = aDev.canvas.width - this.m_Width*.5;
+			this._posX = aDev.canvas.width - this._width*.5;
 		}		
-		if(this.m_PosY - this.m_Height*.5 < 0 )
+		if(this._posY - this._height*.5 < 0 )
 		{
-			this.m_PosY = this.m_Height*.5;
+			this._posY = this._height*.5;
 		}
 		//// the -50 is for a buffer to keep player from hitting bottom for hud
-		if(this.m_PosY + this.m_Height*.5 > aDev.canvas.height-50)
+		if(this._posY + this._height*.5 > aDev.canvas.height-50)
 		{		
-			this.m_PosY =(aDev.canvas.height-50) - this.m_Height*.5;
+			this._posY =(aDev.canvas.height-50) - this._height*.5;
 		}
 	}
 	
@@ -78,11 +85,13 @@ player.prototype = new gameObject()
 
 function backDrop(aWidth,aHeight,newX,newY)
 {	
-	this.m_Width = aWidth;
-	this.m_Height = aHeight;
-	this.m_PosX = newX;
-	this.m_PosY = newY;
-    this.m_Speed = 0;
+    //this._name = " ";
+	this._width = aWidth;
+	this._height = aHeight;
+	this._posX = newX;
+	this._posY = newY;
+    this._speed = 0;
+    
     this.update = function(aDev,aDT)
 	{
 		//pass

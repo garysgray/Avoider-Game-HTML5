@@ -77,8 +77,8 @@ class Device
 		});		
 		window.addEventListener("mousemove", function(mouseEvent) 
 		{
-			sprite.m_PosX = mouseEvent.clientX - canvas.offsetLeft;
-			sprite.m_PosY = mouseEvent.clientY - canvas.offsetTop;	
+			sprite._posX = mouseEvent.clientX - canvas.offsetLeft;
+			sprite._posY = mouseEvent.clientY - canvas.offsetTop;	
 		});
 	}
     

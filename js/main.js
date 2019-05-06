@@ -40,3 +40,4 @@ run();
 //make an official bug page/weird class issue with gameobject
 //use objects updates correctly
 //start moving code from controller to game or tools
+//setupMouse(sprite,aDev) return values instead of passinf in sprite
