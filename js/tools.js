@@ -11,7 +11,7 @@ class Device
         this._canvas.height = height;
         this._mouseDown =  false;
         this._keydown =  false;
-        this._images = new objHolder();
+        this._images = new ObjHolder();
         this._audio = new AudioPlayer();       
     }
     
@@ -30,7 +30,7 @@ class Device
 		window.addEventListener('keydown', function(e) 
 		{
 			keysDown[e.keyCode] = true;
-			//console.log(e.keyCode);			
+						
 		});
 	
 		window.addEventListener('keyup', function(e) 
@@ -83,28 +83,28 @@ class Device
 	}
     
     //this one takes an image object that is passed in directly 
-	renderImage(aImage,aObject)
+	renderImage(aImage,aObjectX,aObjectY)
 	{
-		this._ctx.drawImage(aImage,aObject.m_PosX,aObject.m_PosY);
+		this._ctx.drawImage(aImage,aObjectX,aObjectY);
 	}
     
-    renderClip(aClip,aObject)
+    renderClip(aClip,m_PosX,m_PosY,m_Width,m_Height,m_State)
 	{
 		this._ctx.drawImage(
         aClip,
-        aObject.m_State * aObject.m_Width,
+        m_State * m_Width,
         0, 
-        aObject.m_Width,
-		aObject.m_Height,
-        aObject.m_PosX - aObject.m_Width*.5,
-		aObject.m_PosY  -aObject.m_Height*.5,
-        aObject.m_Width,
-        aObject.m_Height);
+        m_Width,
+		m_Height,
+        m_PosX - m_Width*.5,
+		m_PosY  -m_Height*.5,
+        m_Width,
+        m_Height);
 	}
     
-    centerImage(aImage,aObject)
+    centerImage(aImage,m_PosX,m_PosY,m_Width,m_Height)
     {
-        this._ctx.drawImage(aImage,aObject.m_PosX-aObject.m_Width*.5-12,aObject.m_PosY-aObject.m_Height*.5-12);
+        this._ctx.drawImage(aImage,m_PosX-m_Width*.5-12,m_PosY-m_Height*.5-12);
     }
     
     putText(aString,x,y)
@@ -204,68 +204,80 @@ class Sprite
 	{
 		return this._name;
 	}
-    getImage()
+    get image()
 	{
 		return this._image;
 	}
 }
 
-
-function objHolder()
+class ObjHolder
 {
-	this.m_Objects = new Array();
-    
-    this.addImage= function(aSrc,aName)
+    constructor()
     {
-        var aObject = new Sprite(aSrc,aName);
-        this.m_Objects.push(aObject);
-    }
-       
-    this.addObject= function(aSrc,aName)
-    {
-        var aObject = new Sprite(aSrc,aName);
-        this.m_Objects.push(aObject);
+        this._objects = new Array(); 
     }
 
-	this.addObject = function(aObject)
+    get objects()
+    {
+        return this._objects;
+    }
+    
+    addImage(aSrc,aName)
+    {
+        var aObject = new Sprite(aSrc,aName);
+        this._objects.push(aObject);
+    }
+          
+	addObject(aObject)
 	{
-		this.m_Objects.push(aObject);	
+		this._objects.push(aObject);	
 	}
-	this.subObject = function(aIndex)
+	subObject(aIndex)
 	{
-		this.m_Objects.splice(aIndex,1);
+		this._objects.splice(aIndex,1);
 	}
-	this.clearObjects = function()
+	clearObjects()
 	{
-		this.m_Objects = [];
-		this.m_Objects = new Array();
+		this._objects = [];
+		this._objects = new Array();
 	}
-	this.getIndex = function(aIndex)
+	getIndex(aIndex)
 	{
-		return this.m_Objects[aIndex];
+		return this._objects[aIndex];
 	}
-	this.getSize = function()
+	getSize()
 	{
-		return this.m_Objects.length;
+		return this._objects.length;
 	}
-	this.update = function(aDev,aDT)
+	update(aDev,aDT)
 	{
-		for(var i = 0; i < this.m_Objects.length; i++)
+		for(var i = 0; i < this._objects.length; i++)
 		{
-			this.m_Objects[i].update(aDev,aDT);
+			this._objects[i].update(aDev,aDT);
 		}
 	}
-    this.getObject = function(aName)
+    getImage(aName)
 	{
-		for(var i = 0; i < this.m_Objects.length; i++)
+		for(var i = 0; i < this._objects.length; i++)
 		{
-			if(this.m_Objects[i].name == aName)
+			if(this._objects[i].name == aName)
 			{
-				return this.m_Objects[i].getImage();
+				return this._objects[i].image;
 				break;
 			}		
 		}		
-	}	
+	}
+    getObject(aName)
+        {
+            for(var i = 0; i < this._objects.length; i++)
+            {
+                if(this._objects[i].name == aName)
+                {
+                    return this._objects[i];
+                    break;
+                }		
+            }		
+        }		
 }
 
 class Timer
@@ -286,10 +298,10 @@ class Timer
 	{
 		return this._active;
 	}
-    getImage()
-	{
-		return this._image;
-	}
+    // getImage()
+	// {
+		// return this._image;
+	// }
     
     update()
 	{
@@ -333,288 +345,4 @@ class Timer
 		this._clock = startAmt;
 	}	
 }
-
-
-
-// function timer(timeToCount)
-// {
-	// this.currentTime = 0;
-	// this.lastTime = 0;
-	// this.totalTime = 0;
-	// this.enoughtTime = timeToCount;
-	// this.clock = 0;
-	// this.posX =0;
-	// this.posY = 0;
-    // this.active = false;
-	
-	// this.update = function()
-	// {
-		// this.currentTime = Date.now();
-		// var  thisTime = this.currentTime - this.lastTime;
-		// this.totalTime += thisTime;
-		
-		// if(this.clock < 1)
-		// {
-            // this.active = false;
-			// return true;
-		// }	
-		// if(this.totalTime > this.enoughtTime)
-		// {
-			// this.totalTime = 0;
-			// this.lastTime = this.currentTime;
-			// this.clock--;
-		// }
-		// else
-		// {
-			// this.lastTime = this.currentTime;
-		// }
-	// }	
-	// this.posClock = function(x,y)
-	// {
-		// this.posX = x;
-		// this.posY = y;
-	// }
-	// this.display = function(aDev,x,y)
-	// {	
-		// if(this.clock < 0)
-		// {
-			// this.clock = 0;
-		// }
-		// aDev.putText("TIME:  "+this.clock,x,y);
-
-	// }
-	// this.set = function(startAmt)
-	// {
-        // this.active = true;
-		// this.clock = startAmt;
-	// }
-// }
-
-// class Sound
-// {
-    // constructor(aName,aAudio)
-    // {
-        // this._name = aName;
-        // this._sound = new Audio(aAudio);
-
-        // this.play = function()
-        // {		
-            // this._sound.play();	
-        // }	
-    // }
-// }
-
-// function device(width,height)
-// {
-	// this.m_Canvas = document.getElementById("canvas");
-	// this.m_Ctx = this.m_Canvas.getContext('2d');
-	// this.m_Canvas.width = width;
-	// this.m_Canvas.height = height;
-	// this.m_MouseDown =  false;
-	// this.m_Keydown =  false;
-	// this.m_Images = new imageHolder();
-    // this.audio = new audioPlayer();
-	
-	// keysDown = {};
-	// keysUp = {};
-	
-	// ////device will have the render functions and it will have access to the images or have them passed in
-	// //so it  will be able to be passed and object and be told to rend er its image or clip 
-	
-	// //this one takes an image object that is passed in directly 
-	// this.renderImage = function(aImage,aObject)
-	// {
-		// this.m_Ctx.drawImage(aImage,aObject.m_PosX,aObject.m_PosY);
-
-	// }
-	
-	// this.renderClip = function(aClip,aObject)
-	// {
-		// this.m_Ctx.drawImage(
-        // aClip,
-        // aObject.m_State * aObject.m_Width,
-        // 0, 
-        // aObject.m_Width,
-		// aObject.m_Height,
-        // aObject.m_PosX - aObject.m_Width*.5,
-		// aObject.m_PosY  -aObject.m_Height*.5,
-        // aObject.m_Width,
-        // aObject.m_Height);
-	// }
-	
-	// this.centerImage = function(aImage,aObject)
-    // {
-        // this.m_Ctx.drawImage(aImage,aObject.m_PosX-aObject.m_Width*.5-12,aObject.m_PosY-aObject.m_Height*.5-12);
-    // }
-
-	// this.initKeys = function() 
-	// {
-		// window.addEventListener('keydown', function(e) 
-		// {
-			// keysDown[e.keyCode] = true;
-			// //console.log(e.keyCode);			
-		// });
-	
-		// window.addEventListener('keyup', function(e) 
-		// {
-			// delete keysDown[e.keyCode];
-			// keysUp[e.keyCode] = true;			
-		// });	
-	// }
-	
-	// this.checkKey = function(aNum)
-	// {	
-		// if(aNum in keysDown)
-		// {
-			// return true;
-		// }
-		// else
-		// {
-			// return false;
-		// }
-	// }
-    
-	// this.checkKeyUp = function(aNum)
-	// {	
-		// if(aNum in keysUp && (aNum in keysDown) == false)
-		// {
-			// delete keysUp[aNum];
-			// return true;
-		// }
-		// else
-		// {
-			// return false;
-		// }
-	// }
-	
-	// this.setupMouse = function(sprite,aDev)
-	// {
-		// window.addEventListener('mousedown', function(e) {
-			// aDev.m_MouseDown = true;
-		// });
-		// window.addEventListener('mouseup', function(e) {
-			// aDev.m_MouseDown = false;
-		// });		
-		// window.addEventListener("mousemove", function(mouseEvent) 
-		// {
-			// sprite.m_PosX = mouseEvent.clientX - canvas.offsetLeft;
-			// sprite.m_PosY = mouseEvent.clientY - canvas.offsetTop;	
-		// });
-	// }
-	
-	// this.putText = function(aString,x,y)
-	// {
-		// this.m_Ctx.fillText(aString,x,y);
-	// }
-	
-	// this.centerTextX = function(aString,y)
-	// {
-		// var temp = aString.length;
-		// var center = (this.m_Canvas.width *.5) -temp*4;
-		// this.m_Ctx.fillText(aString,center,y);
-	// }
-	
-	// this.centerTextXY = function(aString)
-	// {
-		// var temp = aString.length;
-		// var centerX = (this.m_Canvas.width *.5) -temp*3.5;
-		// var centerY = (this.m_Canvas.height *.5);
-		
-		// this.m_Ctx.fillText(aString,centerX,centerY);
-	// }
-	
-	// this.colorText = function(color)
-	// {
-		// this.m_Ctx.fillStyle = color.toString(); 
-	// }
-    
-	// this.setFont= function(font)
-	// {
-		// this.m_Ctx.font= font.toString();
-	// }
-    
-    // this.debugText = function(text,posX,posY)
-    // {
-        // this.setFont("24px Arial Black");
-        // this.colorText("white");		
-        // this.putText(text.toString(),posX,posY);
-    // }
-// }
-
-
-// function sound(aName,aAudio)
-// {
-	// this.m_Name = aName;
-	// this.m_Sound = new Audio(aAudio);
-	
-	// this.play = function()
-	// {		
-		// this.m_Sound.play();	
-	// }	
-// }
-
-
-// function audioPlayer()
-// {
-	// this.m_Sounds = new Array();
-
-	// this.addSound = function(aName,aSound)
-	// {
-        // newSound = new sound(aName,aSound);
-		// this.m_Sounds.push(newSound);	
-	// }
-	// this.getSize = function()
-	// {
-		// return this.m_Sounds.length;
-	// }
-	// this.playSound = function(aSoundname)
-	// {
-		// for(var i = 0; i < this.m_Sounds.length; i++)
-		// {
-			// if(this.m_Sounds[i].m_Name == aSoundname)
-			// {
-				// this.m_Sounds[i].m_Sound.play();
-				// break;
-			// }		
-		// }
-	// }
-// }
-
-// function audioPlayer()
-// {
-	// this.m_Sounds = new Array();
-
-	// this.addSound = function(aName,aAudio)
-	// {
-        // newSound = new Sound(aName,aAudio);
-		// this.m_Sounds.push(newSound);	
-	// }
-	// this.getSize = function()
-	// {
-		// return this.m_Sounds.length;
-	// }
-	// this.playSound = function(aSoundname)
-	// {
-		// for(var i = 0; i < this.m_Sounds.length; i++)
-		// {
-			// if(this.m_Sounds[i].name == aSoundname)
-			// {
-				// this.m_Sounds[i].audio.play();
-				// break;
-			// }		
-		// }
-	// }
-// }
-
-// function sprite(aSrc,aName)
-// {
-	// this.m_Image = new Image();
-	// this.m_Image.src = aSrc;
-    // this.m_Name = aName;
-   	
-	// this.getImage = function()
-	// {
-		// return this.m_Image;
-	// }	
-// }
 

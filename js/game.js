@@ -17,8 +17,8 @@ class Game
         this._splashScreen = new backDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
         this._pauseScreen = new backDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
         this._dieScreen = new backDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
-        this._projectiles = new objHolder();
-        this._gameSprites = new objHolder();            
+        this._projectiles = new ObjHolder();
+        this._gameSprites = new ObjHolder();            
         this._timer = new Timer(1000);
     }
     
@@ -49,16 +49,6 @@ class Game
     
     initGame(aDev)
 	{
-		//var sprite1 = new sprite("img/bullet.png","bullet");
-		// var sprite2 = new sprite("img/orb.png","orb");
-        // var sprite3 = new sprite("img/fire.png","fireAmmo");
-        // var sprite4 = new sprite("img/ships.png","player");
-        
-        // var sprite5 = new sprite("img/stars.png","background");
-		// var sprite6 = new sprite("img/splash.png","splash");
-        // var sprite7 = new sprite("img/pause.png","pause");
-        // var sprite8 = new sprite("img/die.png","die");
-
 		aDev.images.addImage("img/bullet.png","bullet");
         aDev.images.addImage("img/orb.png","orb");
 		aDev.images.addImage("img/fire.png","fireAmmo");
@@ -68,7 +58,6 @@ class Game
 		aDev.images.addImage("img/pause.png","pause");
         aDev.images.addImage("img/die.png","die");
         
-
         aDev.audio.addSound("hit","audio/hit.wav");
         aDev.audio.addSound("shoot","audio/shoot.wav");
         aDev.audio.addSound("get","audio/get.wav");

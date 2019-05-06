@@ -1,18 +1,3 @@
-//get rid of name and use type which is an enum
-//make an enum for sprites
-//combine audi and sound object? 
-//add adio controll to device
-//make a text writer obj seperate from device
-//have backdrop object in an array instead of menbers
-//gameConsts should be m_gameConsts
-//keys checks values shoiuld be part of game obj conts?
-//magic numbers in controller 
-//seters and getters ??
-//why do controller and game need width and height
-// should b epart of game constants or controller consts
-//set game values may be repetative
-//whats up with state
-//make an official bug page
 function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 {
     this.m_Name = aName;	
@@ -26,7 +11,7 @@ function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
     
 	this.update = function(aDev,aDT)
 	{
-		
+		//pass
 	}
 	//since most gameobjects will be moving downward
     //main action other then player
@@ -41,20 +26,15 @@ function gameObject(aName, aWidth,aHeight,newX,newY,aSpeed)
 		this.m_PosY = newY;
 	}
        
-	// this.getImage = function()
-	// {
-		// return this.m_Image;
-	// }
-	
-	this.checkObjCollision = function(aObj)
+    this.checkObjCollision = function(m_PosX,m_PosY,m_Width,m_Height)
 	{
-		if(this.m_PosX + this.m_Width*.5-this.m_spaceBuffer > aObj.m_PosX - aObj.m_Width*.5 && this.m_PosX-this.m_Width*.5-this.m_spaceBuffer < aObj.m_PosX + aObj.m_Width*.5
-			&&
-		   this.m_PosY + this.m_Height*.5-this.m_spaceBuffer > aObj.m_PosY - aObj.m_Height*.5 && this.m_PosY- this.m_Height*.5-this.m_spaceBuffer < aObj.m_PosY + aObj.m_Height*.5 )   
-		{
-			return true;
-		}		
-	}	
+        if(this.m_PosX + this.m_Width*.5-this.m_spaceBuffer > m_PosX - m_Width*.5 && this.m_PosX-this.m_Width*.5-this.m_spaceBuffer < m_PosX + m_Width*.5
+        &&
+        this.m_PosY + this.m_Height*.5-this.m_spaceBuffer > m_PosY - m_Height*.5 && this.m_PosY- this.m_Height*.5-this.m_spaceBuffer < m_PosY + m_Height*.5 )   
+        {
+        return true;
+        }		
+	}
 }
 
 function player(aWidth,aHeight,newX,newY,aSpeed)
@@ -69,7 +49,7 @@ function player(aWidth,aHeight,newX,newY,aSpeed)
     
 	this.update = function(aDev,aDT)
 	{
-		
+		//pass
 	}
     
     this.borderCheck = function(aDev)
@@ -105,9 +85,8 @@ function backDrop(aWidth,aHeight,newX,newY)
     this.m_Speed = 0;
     this.update = function(aDev,aDT)
 	{
-		
-	}
-	
+		//pass
+	}	
 }
 backDrop.prototype = new gameObject()
 
@@ -115,24 +94,101 @@ backDrop.prototype = new gameObject()
 
 
 
+// class GameObject
+// {
+    // constructor(aName, aWidth,aHeight,newX,newY,aSpeed)
+    // {
+        // this._name = aName;	
+        // this._width = aWidth;
+        // this._height = aHeight;
+        // this._posX = newX;
+        // this._posY = newY;
+        // this._speed = aSpeed;
+        // this._spaceBuffer = 12;
+        // this._state = 0
+    // } 
+    // get name(){return this._name;}
+    // get width(){return this._width;}
+    // get height(){return this._height;}
+    // get posX(){return this._posX;}
+    // get posY(){return this._posY;}
+    // get speed(){return this._speed;}
+    // get spaceBuffer(){return this._spaceBuffer;}
+    // get state(){return this._state;}
+    
+    // set posX(newX)
+    // {
+        // this._posX = newX;
+    // }
+    // set posY(newY)
+    // {
+        // this._posY = newY;
+    // }
+    
+    // set width(newW)
+    // {
+        // this._width = newW;
+    // }
+    // set height(newH)
+    // {
+        // this._height = newH;
+    // }
+    
+    // update(aDev,aDT)
+	// {
+		
+	// }
+    
+    // moveDown(aDT)
+	// {   
+		// this._posY += this._speed * aDT;  
+	// }
+    // //helps for spawing game objects
+	// movePos(newX,newY)
+	// {
+		// this._posX = newX;
+		// this._posY = newY;
+	// }
+       
+	// // this.getImage = function()
+	// // {
+		// // return this.m_Image;
+	// // }
+	
+	// checkObjCollision(m_posX,m_posy,m_width,m_Height)
+	// {
+		// if(this._posX + this._width*.5-this._spaceBuffer > m_posX - m_width*.5 && this._posX-this._width*.5-this._spaceBuffer < m_PosX + m_Width*.5
+			// &&
+		   // this._posY + this._height*.5-this._spaceBuffer > m_PosY - m_Height*.5 && this._posY- this._height*.5-this._spaceBuffer < m_PosY + m_Height*.5 )   
+		// {
+            // console.log("yo");
+			// return true;
+		// }		
+	// }	
+   
+// }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// class BackDrop 
+// {
+    // constructor(aWidth,aHeight,newX,newY)
+    // {
+        
+        // this._width = aWidth;
+        // this._height = aHeight;
+        // this._posX = newX;
+        // this._posY = newY;
+        // this._speed = 0
+    // }
+    
+    // get width(){return this._width;}
+    // get height(){return this._height;}
+    // get posX(){return this._posX;}
+    // get posY(){return this._posY;}
+    // get speed(){return this._speed;}
+    // get state(){return this._state;}
+    
+    // update(aDev,aDT)
+	// {
+		
+	// }
+// }
