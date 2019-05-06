@@ -38,15 +38,13 @@ class Game
     get dieScreen(){return this._dieScreen;}
     get projectiles(){return this._projectiles;}
     get gameSprites(){return this._gameSprites;}
-    get timer(){return this._timer;}
-    
+    get timer(){return this._timer;}   
     get holdX(){return this._holdX;}
     get holdY(){return this._holdY;}
     
     //set Functions
     set state(newState){this._state = newState;}
-    set playState(newState){this._playState = newState;}
-    
+    set playState(newState){this._playState = newState;}   
     set holdX(newX){this._holdX = newX;}
     set holdY(newY){this._holdY = newY;}
     
@@ -118,19 +116,10 @@ class GameConsts
     get screenHeight(){return this._SCREEN_HEIGHT;}
     get ammoAmount(){return this._AMMO_AMOUNT;}
     get scoreIncreaseAmount(){return this._SCORE_INCREASE_VALUE;}
-    
-    
+        
     get buffer1(){return this._BUFFER_1;}
     get buffer2(){return this._BUFFER_2;}
     get rndRatio(){return this._RND_RATIO;}
-
-
-
-
-
-
-
-
-    
+  
 }
 

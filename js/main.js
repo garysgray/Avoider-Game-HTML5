@@ -1,6 +1,6 @@
 // init values for controller or game objects
+const FRAME_RATE = 1000;	
 var time = 0;
-const frameRateValue = 1000;	
 
 //make our game object that loads data that is particular
 //to this game 
@@ -9,7 +9,7 @@ var myGame = new Game();
 //controller helps set things up and directs how things should work together
 //game object depends on controller to take care of coordination 
 //controller uses games data to help game
-var myControl = new controller(myGame.gameConsts.screenWidth,myGame.gameConsts.screenHeight);
+var myControl = new Controller(myGame.gameConsts.screenWidth,myGame.gameConsts.screenHeight);
 
 //init the actual game using controller but with games inards
 myControl.initGame(myGame);
@@ -20,9 +20,8 @@ function run()
 {
     window.requestAnimationFrame(run);
     var now = new Date().getTime();
-    var dt = (now - (time || now))/frameRateValue;
-	myControl.update(myGame,dt);
-	myControl.render(myGame);
+    var dt = (now - (time || now))/FRAME_RATE;
+	myControl.updateGame(myGame,dt);
     time = now;
     
 	//***DEBUGING text lines example

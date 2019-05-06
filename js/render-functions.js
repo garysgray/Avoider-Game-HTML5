@@ -1,3 +1,6 @@
+
+//**All RenderGame Objects FUNCTIONS**
+// using dev tools and game obg
 function renderNPCSprites(aDev,aGame)
 {
     ////this makes a temp object of the image we want to use

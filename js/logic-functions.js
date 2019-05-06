@@ -1,65 +1,4 @@
-//**UPDATE COLLISIONS FUNCTIONS**
-check_NPC_Collision = function(aDev,aGame)
-{
-    for(var i =0;i< aGame.gameSprites.getSize();i++)
-    {
-        temp = aGame.gameSprites.getIndex(i)
-        if(aGame.player.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))           
-        {            
-            if(aGame.gameSprites.getIndex(i).name == "fireAmmo")
-            {					
-                aDev.audio.playSound("get");
-                aGame.gameSprites.subObject(i);
-                aGame.playState = "SHOOT";
-                aGame.increaseAmmo(aGame.gameConsts.ammoAmount);					
-            }
-            else
-            {
-                aDev.audio.playSound("hurt");
-                aGame.playState = "DEATH";                   
-                aGame.gameSprites.subObject(i);
-                aGame.decreaseLives(1);
-                aGame.state = "LOSE";                   
-                return false;                
-            }	
-        }
-    }
-    return true;
-}
-
-function updateProjectilesCollision(aDev,aGame, aDT)
-{
-    for( var i = 0; i< aGame.projectiles.getSize() ;i++)
-    {
-        for( var j = 0; j< aGame.gameSprites.getSize() ;j++)
-        {
-            temp = aGame.gameSprites.getIndex(j);
-            if(aGame.projectiles.getIndex(i).checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))
-            {
-                aDev.audio.playSound("hit");
-                aGame.gameSprites.subObject(j);
-                aGame.increaseScore(aGame.gameConsts.scoreIncreaseAmount);
-                aGame.projectiles.subObject();
-                break;
-            }
-        }
-    }
-}
-   
-function updateProjectiles(aDev,aGame, aDT)
-{
-    for( var i = 0; i< aGame.projectiles.getSize() ;i++)
-    {
-        aGame.projectiles.getIndex(i).posY -= aGame.projectiles.getIndex(i).speed * aDT;
-         
-        if(aGame.projectiles.getIndex(i).posY < 0)
-        {
-            aGame.projectiles.subObject(i);
-        }
-    }		
-    updateProjectilesCollision(aDev,aGame,aDT);
-}
-
+//**UPDATE Functions based on user input
 function checkUserInput(aDev,aGame)
 {
      if(aDev.mouseDown && Date.now()-aGame.player.projectileTimer > aGame.player.shootDelay || 
@@ -94,6 +33,21 @@ function checkforPause(aDev,aGame)
     }
 }    
    
+//**UPDATE Game Objects FUNCTIONS**
+function updateProjectiles(aDev,aGame, aDT)
+{
+    for( var i = 0; i< aGame.projectiles.getSize() ;i++)
+    {
+        aGame.projectiles.getIndex(i).posY -= aGame.projectiles.getIndex(i).speed * aDT;
+         
+        if(aGame.projectiles.getIndex(i).posY < 0)
+        {
+            aGame.projectiles.subObject(i);
+        }
+    }		
+    updateProjectilesCollision(aDev,aGame,aDT);
+}
+
 function updateNPCSprites(aDev,aGame,aDT)
 {		
     if(Math.random() < 1/aGame.gameConsts.rndRatio)
@@ -155,8 +109,55 @@ function updateNPCSprites(aDev,aGame,aDT)
          }
     }	 
 }
-    	
 
+//**UPDATE COLLISIONS FUNCTIONS**    	
+function check_NPC_Collision(aDev,aGame)
+{
+    for(var i =0;i< aGame.gameSprites.getSize();i++)
+    {
+        temp = aGame.gameSprites.getIndex(i)
+        if(aGame.player.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))           
+        {            
+            if(aGame.gameSprites.getIndex(i).name == "fireAmmo")
+            {					
+                aDev.audio.playSound("get");
+                aGame.gameSprites.subObject(i);
+                aGame.playState = "SHOOT";
+                aGame.increaseAmmo(aGame.gameConsts.ammoAmount);					
+            }
+            else
+            {
+                aDev.audio.playSound("hurt");
+                aGame.playState = "DEATH";                   
+                aGame.gameSprites.subObject(i);
+                aGame.decreaseLives(1);
+                aGame.state = "LOSE";                   
+                return false;                
+            }	
+        }
+    }
+    return true;
+}
+
+function updateProjectilesCollision(aDev,aGame, aDT)
+{
+    for( var i = 0; i< aGame.projectiles.getSize() ;i++)
+    {
+        for( var j = 0; j< aGame.gameSprites.getSize() ;j++)
+        {
+            temp = aGame.gameSprites.getIndex(j);
+            if(aGame.projectiles.getIndex(i).checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))
+            {
+                aDev.audio.playSound("hit");
+                aGame.gameSprites.subObject(j);
+                aGame.increaseScore(aGame.gameConsts.scoreIncreaseAmount);
+                aGame.projectiles.subObject();
+                break;
+            }
+        }
+    }
+}
+   
 
 
 
