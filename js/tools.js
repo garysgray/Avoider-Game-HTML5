@@ -88,23 +88,23 @@ class Device
 		this._ctx.drawImage(aImage,aObjectX,aObjectY);
 	}
     
-    renderClip(aClip,m_PosX,m_PosY,m_Width,m_Height,m_State)
+    renderClip(aClip,aPosX,aPosY,aWidth,aHeight,aState)
 	{
 		this._ctx.drawImage(
         aClip,
-        m_State * m_Width,
+        aState * aWidth,
         0, 
-        m_Width,
-		m_Height,
-        m_PosX - m_Width*.5,
-		m_PosY  -m_Height*.5,
-        m_Width,
-        m_Height);
+        aWidth,
+		aHeight,
+        aPosX - aWidth*.5,
+		aPosY  -aHeight*.5,
+        aWidth,
+        aHeight);
 	}
     
-    centerImage(aImage,m_PosX,m_PosY,m_Width,m_Height)
+    centerImage(aImage,aPosX,aPosY,aWidth,aHeight)
     {
-        this._ctx.drawImage(aImage,m_PosX-m_Width*.5-12,m_PosY-m_Height*.5-12);
+        this._ctx.drawImage(aImage,aPosX-aWidth*.5-12,aPosY-aHeight*.5-12);
     }
     
     putText(aString,x,y)
