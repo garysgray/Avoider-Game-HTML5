@@ -26,7 +26,7 @@ function run()
     time = now;
     
 	//***DEBUGING text lines example
-    //myControl.m_Dev.debugText(myGame.m_PlayState,50,50);
+    //myControl.m_Dev.debugText(myGame.playState,50,50);
 }
 
 run();

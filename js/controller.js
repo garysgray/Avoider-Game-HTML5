@@ -1,3 +1,5 @@
+//import {updateProjectilesCollision} from 'functions';
+
 function controller(newWidth,newHeight)
 {
 	//our controller has a device object to control the HTML5 Canvas
@@ -5,13 +7,6 @@ function controller(newWidth,newHeight)
 	//key events are wrapped in the device object as well, this sets them up
 	this.m_Dev.initKeys();
 	
-	//helps with boundry checking and stuff
-	this.buffer1 = 10;
-	this.buffer2 = 20;
-	this.rndRatio = 20;
-	this.tempX = 0;
-	this.tempY = 0;
-
 	this.initGame = function(aGame)
 	{
 		aGame.initGame(this.m_Dev);
@@ -38,10 +33,10 @@ function controller(newWidth,newHeight)
             if(aGame.playState == "SHOOT")
             {
                 //this is used to have an event like shooting something when player hits mouse button
-                this.checkUserInput(aGame); 
+                checkUserInput(this.m_Dev,aGame); 
             }
 			//changes state of game when player uses input to pause game which takes us to something else
-			this.checkforPause(aGame);
+			checkforPause(this.m_Dev,aGame);
 			//**UPDATE GAME OBJECTS**
 			//**player 
 			//this is a reminder that you can have objects update stuff  by calling their own update function 
@@ -59,26 +54,27 @@ function controller(newWidth,newHeight)
                 }
             }
 			//**UPDATE NPC OBJECTS*
-            this.updateNPCSprites(aGame,aDT);
+            updateNPCSprites(this.m_Dev,aGame,aDT);
 			//function in controller Fix eventually go into another object
-			this.updateProjectiles(aGame,aDT);
+			updateProjectiles(this.m_Dev,aGame,aDT);
 			//**UPDATE COLLISIONS FUNCTIONS**
 			//if player is not in shield mode then we apply collisions
             if(aGame.playState != "SHIELD")
-            {
-                this.check_NPC_Collision(aGame);
+            {         
+                if(check_NPC_Collision(this.m_Dev,aGame)==false)
+                {
+                    aGame.holdX = aGame.player.posX;
+                    aGame.holdY = aGame.player.posY;
+                }
             }
 			break;
 			//////////////////////////////////////////////////////
-			case "PAUSE"://pause-state
-			//this is to hold the position of the player in last location while in pause
-			//so when they come out we can kinda put them back where they were
-			//if they did not move mouse to much
-				aGame.player._posX = this.tempX;
-				aGame.player._posY = this.tempY;  
-                //check to see if player has used input to un-pause game
+			case "PAUSE"://pause-state		
 				if(this.m_Dev.checkKeyUp(aGame.gameConsts.pauseKey))//P-key
 				{	
+                    aGame.player.posX = aGame.holdX;
+                    aGame.player.posY = aGame.holdY; 
+                    
 					aGame.playState = "SHIELD"
 					aGame.timer.set(aGame.gameConsts.shieldTime);
 					aGame.state = "PLAY";
@@ -104,8 +100,9 @@ function controller(newWidth,newHeight)
 			{	
 				//this is to hold the image of the player in last location after dying
 				//its to help show the death image in there location of death on screen
-                aGame.player._posX = this.tempX;
-				aGame.player._posY = this.tempY;               
+                aGame.player.posX = aGame.holdX;
+				aGame.player.posY = aGame.holdY; 
+                
 				if(aGame.lives <= 0)
 				{
                     console.log("no lives")
@@ -170,9 +167,9 @@ function controller(newWidth,newHeight)
 				this.m_Dev.colorText("red");//changes color of font until its changed
                 this.m_Dev.renderImage(this.m_Dev.images.getImage("background"),aGame.backGround.posX,aGame.backGround.posY);
                 ////functions for rendering game objects are done 
-                this.renderNPCSprites(aGame);
-                this.renderBullets(aGame);
-				this.renderPlayer(aGame);
+                renderNPCSprites(this.m_Dev,aGame);
+                renderBullets(this.m_Dev,aGame);
+				renderPlayer(this.m_Dev,aGame);
 				////HUD
                 //magic numbers
 				this.m_Dev.centerTextX("Score :  "+ aGame.score.toString(),this.m_Dev.canvas.height-25);
@@ -214,249 +211,11 @@ function controller(newWidth,newHeight)
 				{
 					this.m_Dev.centerTextX("SORRY  YOU  DIED,  PRESS  R  TO  REVIVE",this.m_Dev.canvas.width/4,this.m_Dev.canvas.height-50);
 				}
-				this.renderPlayer(aGame);
+				renderPlayer(this.m_Dev,aGame);
 			}
 			break;
 			default:		
 		}	
     }
-	//**UPDATE INPUT LOGIC FUNCTIONS **
-	this.checkforPause = function(aGame)
-	{
-		if(this.m_Dev.checkKeyUp(aGame.gameConsts.pauseKey))//P-key
-		{	this.tempX = aGame.player.posX;
-			this.tempY= aGame.player.posY;
-			aGame.state = "PAUSE";//pause gameState
-		}
-	}
-    
-	 //this is used when the game needs an object (player) bounded to mouses location
-	// this.setMouseToPlayer = function(aPlayer)
-	// {
-		// this.m_Dev.setupMouse(aPlayer,this.m_Dev);
-	// }
-		
-	//this is an function that checks to see if the mouse button is clicked 
-	//for now it adds objects to the projectilesHolder and shoots a projectile
-	this.checkUserInput = function(aGame)
-	{
-		 if(this.m_Dev.mouseDown && Date.now()-aGame.player.projectileTimer > aGame.player.shootDelay || 
-            this.m_Dev.checkKey(aGame.gameConsts.playKey)  && Date.now()-aGame.player.projectileTimer > aGame.player.shootDelay)
-        {
-            var bullet = new GameObject("bullet",12,12,(aGame.player.posX) ,aGame.player.posY ,aGame.gameConsts.bulletSpeed);
-            //->A2C	////this is where objects are getting adjusted to the center
-            bullet.posX -= bullet.width*.5;
-            bullet.posY += bullet.height*.5;
-            aGame.projectiles.addObject(bullet);			
-			////this is where we set the players shoot delay timer 
-            aGame.player.projectileTimer = Date.now();
-            ////the audio sound of shooting
-            this.m_Dev.audio.playSound("shoot");          
-            if(aGame.ammo <= 0)
-            {
-                aGame.playState = "AVOID";
-            }
-            else
-            {
-                 aGame.decreaseAmmo(1);
-            }
-        }
-	}
 	
-	  //////////////////////
-	//**UPDATE GAME OBJECTS**
-	this.updateProjectiles = function(aGame, aDT)
-	{
-		 for( var i = 0; i< aGame.projectiles.getSize() ;i++)
-        {
-            aGame.projectiles.getIndex(i).posY -= aGame.projectiles.getIndex(i).speed * aDT;
-			 
-			 if(aGame.projectiles.getIndex(i).posY < 0)
-            {
-                aGame.projectiles.subObject(i);
-            }
-        }		
-		this.updateProjectilesCollision(aGame, aDT)
-		
-	}
-
-    this.updateNPCSprites = function(aGame,aDT)
-	{		
-		if(Math.random() < 1/this.rndRatio)
-		{
-			//this is made to help get us a X pos  in range that will not let orb be off the screen
-			//buff values help dial in perfect position
-			var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-this.buffer1)-this.buffer2+1));		
-            orb = new GameObject("orb",29,29,rndXValue,0, aGame.gameConsts.orbSpeed);
-					
-			for(var i = 0;i < aGame.gameSprites.getSize();i++)
-			{			
-				var count = 0;
-                temp = aGame.gameSprites.getIndex(i)
-				while(orb.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height) )
-				{
-					if(count > 3)
-					{
-						break;
-					}
-					var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
-					orb.movePos = (rndXValue,0);
-					count ++;
-				}		
-			}
-			aGame.gameSprites.addObject(orb);        
-		}
-        
-        if(Math.random() < 1/99)
-		{
-			//this is made to help get us a X pos  in range that will not let sprite be off the screen
-			//buff values help dial in perfect position
-			var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-this.buffer1)-this.buffer2+1));			
-			fireAmmo = new GameObject("fireAmmo",20,20,rndXValue,0, aGame.gameConsts.orbSpeed);       
-			for(var i = 0;i < aGame.gameSprites.getSize();i++)
-			{
-				var count = 0;
-                temp = aGame.gameSprites.getIndex(i);
-				while(fireAmmo.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height) )
-				{
-					if(count > 3)
-					{
-						break;
-					}
-					var rndXValue = Math.floor(Math.random() *((this.m_Dev.canvas.width-(this.buffer1*count))-(this.buffer2*count)+1));
-					fireAmmo.movePos = (rndXValue,0);
-					count ++;
-				}				
-			}
-			aGame.gameSprites.addObject(fireAmmo);     
-		}
-        //magic numbers
-		//check to see if sprite is off screen, if it is delete it from array
-		for(var i = 0;i <  aGame.gameSprites.getSize(); i++)
-		{
-			 aGame.gameSprites.getIndex(i).moveDown(aDT);			 
-			 if(aGame.gameSprites.getIndex(i).posY > this.m_Dev.canvas.height-100)
-			 {
-				aGame.gameSprites.subObject(i);
-			 }
-		}	
-		
-	}
-    
-	//////////////////////
-   //**UPDATE COLLISIONS FUNCTIONS**
-	this.check_NPC_Collision = function(aGame)
-	{
-		for(var i =0;i< aGame.gameSprites.getSize();i++)
-		{
-            temp = aGame.gameSprites.getIndex(i)
-			if(aGame.player.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))           
-			{            
-                if(aGame.gameSprites.getIndex(i).name == "fireAmmo")
-                {					
-                    this.m_Dev.audio.playSound("get");
-                    aGame.gameSprites.subObject(i);
-                    aGame.playState = "SHOOT";
-                    aGame.increaseAmmo(aGame.gameConsts.ammoAmount);					
-                }
-                else
-                {
-                    this.m_Dev.audio.playSound("hurt");
-                    aGame.playState = "DEATH";                   
-                    aGame.gameSprites.subObject(i);
-                    aGame.decreaseLives(1);
-                    aGame.state = "LOSE";                   
-					this.tempX = aGame.player.posX;
-					this.tempY= aGame.player.posY;                  
-                }	
-			}
-		}
-	}
-	
-	this.updateProjectilesCollision = function(aGame, aDT)
-	{
-		for( var i = 0; i< aGame.projectiles.getSize() ;i++)
-        {
-			for( var j = 0; j< aGame.gameSprites.getSize() ;j++)
-			{
-                temp = aGame.gameSprites.getIndex(j);
-				if(aGame.projectiles.getIndex(i).checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))
-				{
-					this.m_Dev.audio.playSound("hit");
-					aGame.gameSprites.subObject(j);
-					aGame.increaseScore(aGame.gameConsts.scoreIncreaseAmount);
-					aGame.projectiles.subObject();
-					break;
-				}
-			}
-		}
-	}
-	
-	//////////////////////
-	////RENDER FUNCTIONS	
-    this.renderNPCSprites = function(aGame)
-    {
-        ////this makes a temp object of the image we want to use
-		//this is so the image holder does not have to keep finding image
-        tempImage1 = this.m_Dev.images.getImage("orb")
-		tempImage2 = this.m_Dev.images.getImage("fireAmmo")	
-		 for (var i = 0; i < aGame.gameSprites.getSize(); i++)
-        {	
-			////this is to make a temp object for easier code to write and understand
-			tempObj = aGame.gameSprites.getIndex(i);            
-            switch(tempObj.name)
-			{
-				case "orb":
-				 this.m_Dev.renderImage(tempImage1,tempObj.posX,tempObj.posY);
-				break;
-				case "fireAmmo":
-				  this.m_Dev.renderImage(tempImage2,tempObj.posX,tempObj.posY);
-				break;
-			}           
-        }
-    }
-    
-	this.renderBullets = function(aGame)
-	{	
-		////this makes a temp object of the image we want to use
-		//this is so the image holder does not have to keep finding image
-		tempImage = this.m_Dev.images.getImage("bullet")	
-		 for (var i = 0; i < aGame.projectiles.getSize(); i++)
-			{	
-				////this is to make a temp object for easier code to write and understand
-				tempObj = aGame.projectiles.getIndex(i);
-				this.m_Dev.renderImage(tempImage,tempObj.posX,tempObj.posY);
-			}
-	}
-	
-	this.renderPlayer = function(aGame)
-	{
-        tempImage = this.m_Dev.images.getImage("player")
-        temp = aGame.player;
-		if(aGame.playState == "SHIELD")
-		{
-			aGame.player.state = 1;
-			this.m_Dev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 				
-		}       
-        else if(aGame.playState == "SHOOT")
-		{
-			aGame.player.state = 2
-			this.m_Dev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 				
-		}
-		else if(aGame.playState == "SUPER")
-		{
-			aGame.player.state = 3;
-			this.m_Dev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 		
-		}		
-		else if(aGame.playState == "DEATH")
-		{
-			aGame.player.state = 4;
-			this.m_Dev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 		
-		}      
-		else
-		{
-			aGame.player.state = 0;
-			this.m_Dev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 
-		}		
-	}		
 }

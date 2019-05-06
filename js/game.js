@@ -12,7 +12,7 @@ class Game
         this._canvasHeight = this._gameConsts.screenHeight;
         this._player = new Player(32,29,100,100);
         //this._playState = {"AVOID":0, "SHIELD":1, "SHOOT":2 ,"SUPER": 3, "DEATH":4};
-        this._playState = 0        
+        this._playState = 0;        
         this._backGround = new BackDrop(600,600,0,0);
         this._splashScreen = new BackDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
         this._pauseScreen = new BackDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
@@ -20,6 +20,8 @@ class Game
         this._projectiles = new ObjHolder();
         this._gameSprites = new ObjHolder();            
         this._timer = new Timer(1000);
+        this._holdX = 0;
+        this._holdY = 0;
     }
     
     //get functions
@@ -38,9 +40,16 @@ class Game
     get gameSprites(){return this._gameSprites;}
     get timer(){return this._timer;}
     
+    get holdX(){return this._holdX;}
+    get holdY(){return this._holdY;}
+    
     //set Functions
     set state(newState){this._state = newState;}
     set playState(newState){this._playState = newState;}
+    
+    set holdX(newX){this._holdX = newX;}
+    set holdY(newY){this._holdY = newY;}
+    
     emptyAmmo(){this._ammo =0;}    
     increaseAmmo(amount){this._ammo += amount;}
     decreaseAmmo(amount){this._ammo -= amount;}
@@ -94,6 +103,9 @@ class GameConsts
         this._SCREEN_HEIGHT = 600;
         this._AMMO_AMOUNT = 10;
         this._SCORE_INCREASE_VALUE = 10;
+        this._BUFFER_1 = 10;
+        this._BUFFER_2 = 20;
+        this._RND_RATIO = 20;
     }
     //getters
     get bulletSpeed(){return this._BULLET_SPEED;}
@@ -105,6 +117,20 @@ class GameConsts
     get screenWidth(){return this._SCREEN_WIDTH;}
     get screenHeight(){return this._SCREEN_HEIGHT;}
     get ammoAmount(){return this._AMMO_AMOUNT;}
-    get scoreIncreaseAmount(){return this._SCORE_INCREASE_VALUE;}   
+    get scoreIncreaseAmount(){return this._SCORE_INCREASE_VALUE;}
+    
+    
+    get buffer1(){return this._BUFFER_1;}
+    get buffer2(){return this._BUFFER_2;}
+    get rndRatio(){return this._RND_RATIO;}
+
+
+
+
+
+
+
+
+    
 }
 
