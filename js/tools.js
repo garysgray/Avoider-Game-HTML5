@@ -65,7 +65,7 @@ class Device
 		}
 	}
     
-    setupMouse(sprite,aDev)
+    setupMouse(gameObject,aDev)
 	{       
 		window.addEventListener('mousedown', function(e) {
 			aDev.mouseDown = true;
@@ -77,8 +77,8 @@ class Device
 		});		
 		window.addEventListener("mousemove", function(mouseEvent) 
 		{
-			sprite._posX = mouseEvent.clientX - canvas.offsetLeft;
-			sprite._posY = mouseEvent.clientY - canvas.offsetTop;	
+			gameObject.posX = mouseEvent.clientX - canvas.offsetLeft;
+			gameObject.posY = mouseEvent.clientY - canvas.offsetTop;	
 		});
 	}
     
