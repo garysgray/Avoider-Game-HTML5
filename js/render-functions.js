@@ -59,7 +59,7 @@ function renderPlayer(aDev,aGame)
         break; 
         case playStates.SHOOT:
         {         
-            aGame.player.state = playStates.SHIELD;
+            aGame.player.state = playStates.SHOOT;
             aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state);
         }
         break; 
