@@ -1,21 +1,25 @@
-//**UPDATE Functions based on user input
+//**These Functions are called in update by controller
+
+//user n put is mouse and keyboard clicks within shooting timer and player.shootdelay to help make it smooth
+//then we shoot bullets
 function checkUserInput(aDev,aGame)
 {
      if(aDev.mouseDown && Date.now()-aGame.player.projectileTimer > aGame.player.shootDelay || 
         aDev.checkKey(aGame.gameConsts.playKey)  && Date.now()-aGame.player.projectileTimer > aGame.player.shootDelay)
     {
         var bullet = new GameObject("bullet",12,12,(aGame.player.posX) ,aGame.player.posY ,aGame.gameConsts.bulletSpeed);
-        //->A2C	////this is where objects are getting adjusted to the center
+        //this is where objects are getting adjusted to the center
         bullet.posX -= bullet.width*.5;
         bullet.posY += bullet.height*.5;
         aGame.projectiles.addObject(bullet);			
         ////this is where we set the players shoot delay timer 
         aGame.player.projectileTimer = Date.now();
         ////the audio sound of shooting
-        aDev.audio.playSound("shoot");          
+        aDev.audio.playSound("shoot");
+        //if we are out of ammo we change the type of ship sprite 
         if(aGame.ammo <= 0)
         {
-            aGame.playState = "AVOID";
+            aGame.playState = playStates.AVOID;
         }
         else
         {
@@ -24,16 +28,20 @@ function checkUserInput(aDev,aGame)
     }
 }
 
+//looking for user to pause then we change game state
+//grabs current position first for when un-pausing
 function checkforPause(aDev,aGame)
 {
     if(aDev.checkKeyUp(aGame.gameConsts.pauseKey))//P-key
     {	aGame.holdX = aGame.player.posX;
         aGame.holdY= aGame.player.posY;
-        aGame.state = "PAUSE";//pause gameState
+        aGame.state = gameStates.PAUSE;
     }
 }    
    
-//**UPDATE Game Objects FUNCTIONS**
+//**functions that update game objects**
+
+//basicly updates that y positions of the bullets and then calls the check collison function
 function updateProjectiles(aDev,aGame, aDT)
 {
     for( var i = 0; i< aGame.projectiles.getSize() ;i++)
@@ -48,6 +56,8 @@ function updateProjectiles(aDev,aGame, aDT)
     updateProjectilesCollision(aDev,aGame,aDT);
 }
 
+//This updates all game objects other then player and bullets
+//basicly updates there positions and then calls for collision
 function updateNPCSprites(aDev,aGame,aDT)
 {		
     if(Math.random() < 1/aGame.gameConsts.rndRatio)
@@ -110,35 +120,11 @@ function updateNPCSprites(aDev,aGame,aDT)
     }	 
 }
 
-//**UPDATE COLLISIONS FUNCTIONS**    	
-function check_NPC_Collision(aDev,aGame)
-{
-    for(var i =0;i< aGame.gameSprites.getSize();i++)
-    {
-        temp = aGame.gameSprites.getIndex(i)
-        if(aGame.player.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))           
-        {            
-            if(aGame.gameSprites.getIndex(i).name == "fireAmmo")
-            {					
-                aDev.audio.playSound("get");
-                aGame.gameSprites.subObject(i);
-                aGame.playState = "SHOOT";
-                aGame.increaseAmmo(aGame.gameConsts.ammoAmount);					
-            }
-            else
-            {
-                aDev.audio.playSound("hurt");
-                aGame.playState = "DEATH";                   
-                aGame.gameSprites.subObject(i);
-                aGame.decreaseLives(1);
-                aGame.state = "LOSE";                   
-                return false;                
-            }	
-        }
-    }
-    return true;
-}
+//**functions that update game objects collision**
 
+//checks the projectiles collision with other game objects such as orbs and fire ammo
+//plays sounds if it a bullet hits an object
+//then removes both objects from there holder objs 
 function updateProjectilesCollision(aDev,aGame, aDT)
 {
     for( var i = 0; i< aGame.projectiles.getSize() ;i++)
@@ -157,7 +143,40 @@ function updateProjectilesCollision(aDev,aGame, aDT)
         }
     }
 }
-   
+
+//checks the players collision with other game objects such as orbs and fire ammo
+//plays sounds if it hits an object
+//then removes both objects from there holder objs 
+//game states get changed based on type  of object hit	
+function check_NPC_Collision(aDev,aGame)
+{
+    for(var i =0;i< aGame.gameSprites.getSize();i++)
+    {
+        temp = aGame.gameSprites.getIndex(i)
+        if(aGame.player.checkObjCollision(temp.posX,temp.posY,temp.width,temp.height))           
+        {            
+            if(aGame.gameSprites.getIndex(i).name == "fireAmmo")
+            {					
+                aDev.audio.playSound("get");
+                aGame.gameSprites.subObject(i);
+                aGame.playState = playStates.SHOOT;
+                aGame.increaseAmmo(aGame.gameConsts.ammoAmount);					
+            }
+            else
+            {
+                aDev.audio.playSound("hurt");
+                aGame.playState = playStates.DEATH;                   
+                aGame.gameSprites.subObject(i);
+                aGame.decreaseLives(1);
+                aGame.state = gameStates.LOSE;                   
+                return false;                
+            }	
+        }
+    }
+    return true;
+}
+
+
 
 
 

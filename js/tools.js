@@ -1,3 +1,11 @@
+//tools are here to help the controller render the game
+//main tool is the device which holds the canvas tools for rendering
+//also holds tools to help get user input , 
+//holders to utilize sprite, and sound class objects
+//last but not least there is also timer object
+
+//these are global and used by device key checker
+//its a issue i need to fix but works for now
 keysDown = {};
 keysUp = {}; 
 

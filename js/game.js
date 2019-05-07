@@ -1,18 +1,27 @@
+//lot of stuff in here most info is related to the game as a whole 
+//game data that helps game objects know where to be and what to do..
+//assets, consts for image placments, game objects ect ect ..
+//a few functions mainly for set up.
+
+
+//state objects help keep track of what should happen or what assets get used during differnt points of game
+const gameStates = { INIT: 0, PLAY: 1, PAUSE: 2, WIN:3, LOSE:4};
+const playStates = {AVOID:0, SHIELD:1, SHOOT:2 ,SUPER: 3, DEATH:4};
+
+
 class Game
 {
     constructor()
     {
-        //this._state = { "INIT": 0, "PLAY": 1, "PAUSE": 2, "WIN":3, "LOSE":4};
-        this._state = "INIT";//init
+        this._state = gameStates.INIT;//init
         this._score = 0;
         this._lives = 0;
         this._ammo = 0;
         this._gameConsts = new GameConsts();
         this._canvasWidth = this._gameConsts.screenWidth;
         this._canvasHeight = this._gameConsts.screenHeight;
-        this._player = new Player(32,29,100,100);
-        //this._playState = {"AVOID":0, "SHIELD":1, "SHOOT":2 ,"SUPER": 3, "DEATH":4};
-        this._playState = 0;        
+        this._player = new Player(32,29,100,100);        
+        this._playState = playStates.AVOID;        
         this._backGround = new BackDrop(600,600,0,0);
         this._splashScreen = new BackDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
         this._pauseScreen = new BackDrop(400,100,this._canvasWidth*.5,this._canvasHeight*.5);
@@ -54,6 +63,7 @@ class Game
     decreaseLives(amount){this._lives -= amount;}
     increaseScore(amount){this._score += amount;}
     
+    //place where we set up game where we need a device to establish assets    
     initGame(aDev)
 	{
 		aDev.images.addImage("img/bullet.png","bullet");
@@ -71,22 +81,26 @@ class Game
         aDev.audio.addSound("hurt","audio/hurt.wav");	
 	}
     
+    //set up game values eac time game starts
     setGame(aDev)
 	{
 		this._score = 0;
 		this._lives = 5;
 		this._gameSprites.clearObjects();
 		this._player.movePos(250,250);
-        this._playState = "AVOID";
+        this._playState = playStates.AVOID;
         this._ammo = 0;
         this.setMouseToPlayer(aDev,this._player);
-    } 
+    }
+    
     //this is used when the game needs an object (player) bounded to mouses location
 	setMouseToPlayer(aDev,aPlayer)
 	{
 		aDev.setupMouse(aPlayer,aDev);
 	}  
 }
+//Its a bit wierd but it helps me keep key const in one place that I can add
+//genrally help with game play and tweeking things
 class GameConsts
 {
     constructor()
@@ -115,8 +129,7 @@ class GameConsts
     get screenWidth(){return this._SCREEN_WIDTH;}
     get screenHeight(){return this._SCREEN_HEIGHT;}
     get ammoAmount(){return this._AMMO_AMOUNT;}
-    get scoreIncreaseAmount(){return this._SCORE_INCREASE_VALUE;}
-        
+    get scoreIncreaseAmount(){return this._SCORE_INCREASE_VALUE;}        
     get buffer1(){return this._BUFFER_1;}
     get buffer2(){return this._BUFFER_2;}
     get rndRatio(){return this._RND_RATIO;}

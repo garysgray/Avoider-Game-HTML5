@@ -1,6 +1,6 @@
+//**These Functions are called in renderGameObjects by controller
 
-//**All RenderGame Objects FUNCTIONS**
-// using dev tools and game obg
+//Using dev tools and game info renders gameSprites(ammo and orbs)
 function renderNPCSprites(aDev,aGame)
 {
     ////this makes a temp object of the image we want to use
@@ -23,6 +23,7 @@ function renderNPCSprites(aDev,aGame)
     }
 }
 
+//Using dev tools and game info renders projectiles(bullets)
 function renderBullets(aDev,aGame)
 {	
     ////this makes a temp object of the image we want to use
@@ -35,36 +36,46 @@ function renderBullets(aDev,aGame)
             aDev.renderImage(tempImage,tempObj.posX,tempObj.posY);
         }
 }
-	
+
+//Using dev tools and game info renders player using different clips based on playerState	
 function renderPlayer(aDev,aGame)
-{
+{    
     tempImage = aDev.images.getImage("player")
     temp = aGame.player;
-    if(aGame.playState == "SHIELD")
+    
+    switch(aGame.playState)
     {
-        aGame.player.state = 1;
-        aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 				
-    }       
-    else if(aGame.playState == "SHOOT")
-    {
-        aGame.player.state = 2
-        aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 				
-    }
-    else if(aGame.playState == "SUPER")
-    {
-        aGame.player.state = 3;
-        aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 		
-    }		
-    else if(aGame.playState == "DEATH")
-    {
-        aGame.player.state = 4;
-        aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 		
-    }      
-    else
-    {
-        aGame.player.state = 0;
-        aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 
-    }		
+        case playStates.AVOID:
+        {          
+            aGame.player.state = playStates.AVOID;
+            aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 
+        }
+        break;
+        case playStates.SHIELD:
+        {         
+            aGame.player.state = playStates.SHIELD;
+            aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state);  
+        }
+        break; 
+        case playStates.SHOOT:
+        {         
+            aGame.player.state = playStates.SHIELD;
+            aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state);
+        }
+        break; 
+        case playStates.SUPER:
+        {         
+            aGame.player.state =playStates.SUPER;
+            aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 
+        }
+        break; 
+        case playStates.DEATH:
+        {         
+            aGame.player.state = playStates.DEATH;
+            aDev.renderClip(tempImage,temp.posX,temp.posY,temp.width,temp.height,temp.state); 
+        }
+        break;      
+    }   
 }
 
-		
+	

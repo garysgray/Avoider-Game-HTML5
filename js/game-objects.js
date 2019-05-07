@@ -1,3 +1,10 @@
+//game object is the super class and player and backdrops are children
+//they for now just hold info with a few functions
+//will probaly move more functionalaty into them over time
+//for example actually utilize ther update functions
+
+//your basic object for keeping track of positions and speed
+//has a collision function, might get more
 class GameObject
 {
     constructor(aName,aWidth,aHeight,newX,newY,aSpeed)
@@ -57,6 +64,7 @@ class GameObject
 	}   
 }
 
+//player has a timer and delay  for shooting bullets
 class Player extends GameObject
 {
     constructor(aWidth,aHeight,newX,newY,aSpeed)
@@ -83,6 +91,7 @@ class Player extends GameObject
 	{
 		
 	}
+    //checks collision of canvas border and player position
     borderCheck(aDev)
 	{
 		if(this._posX - this._width*.5 < 0 )
@@ -105,6 +114,8 @@ class Player extends GameObject
 	}   
 }
 
+//utilized for showing things in game like billboards are backgrounds
+//they have game object functions so they can be moved around easily
 class BackDrop extends GameObject
 {
     constructor(aWidth,aHeight,newX,newY)
